@@ -2,68 +2,72 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class AnimationScript : MonoBehaviour {
+namespace WhiteWolf {
 
-    [Space]
+    public class AnimationScript : MonoBehaviour {
 
-    public string animFolder;
+        [Space]
 
-    [Space]
+        public string animFolder;
 
-    [Range(0, 1)]
-    public float sec;
+        [Space]
 
-    [Space]
+        [Range(0, 1)]
+        public float sec;
 
-    public Sprite[] frames;
+        [Space]
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+        public Sprite[] frames;
 
-    SpriteRenderer sr;
-    float time;
-    int f = 0;
-    string old_folder = "none";
+        /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+        SpriteRenderer sr;
+        float time;
+        int f = 0;
+        string old_folder = "none";
 
-    void Awake(){
+        /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
 
-        f = 0;
-        sr = GetComponent<SpriteRenderer>();
-        setAnim();
+        void Awake(){
+
+            f = 0;
+            sr = GetComponent<SpriteRenderer>();
+            setAnim();
         
-    }
+        }
 
-    void Start(){
+        void Start(){
 
-        newFrames();
+            newFrames();
         
-    }
+        }
 
-    void Update(){
+        void Update(){
 
-        time += Time.deltaTime;
+            time += Time.deltaTime;
 
-        newFrames();
-        setAnim();
-        sr.sprite = frame();
+            newFrames();
+            setAnim();
+            sr.sprite = frame();
         
+        }
+
+        /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+
+        void setAnim() => frames = Resources.LoadAll<Sprite>($"{animFolder}");
+
+        Sprite frame(){
+
+            if ( time >= sec ){ time = 0; f++; }
+
+            if ( f == frames.Length ) f = 1;
+
+            return frames[f];
+
+        }
+
+        void newFrames(){ if ( animFolder != old_folder ){ old_folder = animFolder; f = 0; } }
+
     }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-
-    void setAnim() => frames = Resources.LoadAll<Sprite>($"{animFolder}");
-
-    Sprite frame(){
-
-        if ( time >= sec ){ time = 0; f++; }
-
-        if ( f == frames.Length ) f = 1;
-
-        return frames[f];
-
-    }
-
-    void newFrames(){ if ( animFolder != old_folder ){ old_folder = animFolder; f = 0; } }
-
+    
 }
